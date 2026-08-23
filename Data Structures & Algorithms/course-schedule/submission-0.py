@@ -1,0 +1,26 @@
+from collections import deque
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+
+        adj = [[] for _ in range(numCourses)]
+        indeg = [0]*numCourses
+
+        for course,prereq in prerequisites:
+            adj[prereq].append(course)
+            indeg[course]+=1
+
+        q = deque(course for course in range(numCourses)  if indeg[course]==0)
+        order = []
+        for i in range(numCourses):
+            while q:
+                prereq = q.popleft()
+                order.append(prereq)
+                for course in adj[prereq]:
+                    indeg[course]-=1
+                    if indeg[course]== 0:
+                        q.append(course)
+        
+        if len(order)!= numCourses:
+            return False
+        return True
+        
